@@ -5,27 +5,21 @@ cls
 echo Настройка системы учета инструмента
 echo.
 
-REM 1. Проверка PostgreSQL
+REM Установите правильный пароль здесь!
+set PGPASSWORD=123456
+
 echo [1] Проверяю PostgreSQL...
 where psql >nul 2>&1
 
 if errorlevel 1 (
     echo ❌ PostgreSQL не найден
-    echo.
-    set /p choice="Установить PostgreSQL? (y/n): "
-    
-    if /i "%choice%"=="y" (
-        start https://www.postgresql.org/download/
-        echo Откройте ссылку и установите
-    )
     pause
-    exit
+    exit /b 1
 )
 
 echo ✅ PostgreSQL установлен
 echo.
 
-REM 2. Проверка базы
 echo [2] Проверяю базу данных...
 psql -U postgres -d ToolManagementSystem -c "SELECT 1;" >nul 2>&1
 
@@ -35,8 +29,14 @@ if errorlevel 1 (
     set /p choice="Создать базу данных? (y/n): "
     
     if /i "%choice%"=="y" (
-        psql -U postgres -c "CREATE DATABASE \"ToolManagementSystem\";"
-        echo ✅ База создана
+        echo Создаю базу...
+        psql -U postgres -c "CREATE DATABASE \"ToolManagementSystem\";" 2>&1
+        if errorlevel 1 (
+            echo ❌ Ошибка создания базы!
+            echo Проверьте пароль в скрипте (строка 8)
+        ) else (
+            echo ✅ База создана
+        )
     ) else (
         echo Создайте базу вручную
     )
