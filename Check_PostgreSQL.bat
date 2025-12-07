@@ -6,7 +6,7 @@ echo Настройка системы учета инструмента
 echo.
 
 REM Установите правильный пароль здесь!
-set PGPASSWORD=123456
+set PGPASSWORD=1234
 
 echo [1] Проверяю PostgreSQL...
 where psql >nul 2>&1
@@ -48,3 +48,4 @@ echo.
 echo Готово! Запустите: launch_sys.bat
 echo.
 pause
+
